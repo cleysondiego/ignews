@@ -48,7 +48,7 @@ export const getStaticProps: GetStaticProps = async () => {
     pageSize: 100,
   });
 
-  console.log(response);
+  console.log(JSON.stringify(response, null, 2));
 
   return {
     props: {}
