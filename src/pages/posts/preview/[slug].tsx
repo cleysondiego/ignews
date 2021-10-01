@@ -1,4 +1,5 @@
 import { GetStaticPaths, GetStaticProps } from "next"
+import { Session } from 'next-auth';
 import { useSession } from "next-auth/client";
 import Head from "next/head";
 import Link from "next/link";
@@ -19,12 +20,18 @@ interface PostPreviewProps {
   }
 }
 
+interface SessionLocal extends Session {
+  activeSubscription?: boolean;
+}
+
 export default function PostPreview({ post }: PostPreviewProps) {
   const [session] = useSession();
   const router = useRouter();
 
+  const sessionLocal: SessionLocal = session;
+
   useEffect(() => {
-    if (session?.activeSubscription) {
+    if (sessionLocal?.activeSubscription) {
       router.push(`/posts/${post.slug}`);
     }
   }, [session]);
