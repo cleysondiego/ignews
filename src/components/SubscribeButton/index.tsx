@@ -1,3 +1,4 @@
+import { Session } from 'next-auth';
 import { useSession, signIn } from 'next-auth/client';
 import { useRouter } from 'next/router';
 import { api } from '../../services/api';
@@ -5,17 +6,23 @@ import { getStripeJs } from '../../services/stripe-js';
 
 import styles from './styles.module.scss';
 
+interface SessionLocal extends Session {
+  activeSubscription?: boolean;
+}
+
 export function SubscribeButton() {
   const [session] = useSession();
+
+  const sessionLocal: SessionLocal = session;
   const router = useRouter();
 
   async function handleSubscribe() {
-    if (!session) {
+    if (!sessionLocal) {
       signIn('github');
       return;
     }
 
-    if (session.activeSubscription) {
+    if (sessionLocal.activeSubscription) {
       router.push('/posts');
       return;
     }
